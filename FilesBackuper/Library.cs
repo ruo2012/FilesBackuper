@@ -92,10 +92,10 @@ namespace FilesBackuper
                     string orignalPath = srcdir + file.Substring(file.LastIndexOf("\\"));   //最原始的文件路径
                     FileInfo fl = new FileInfo(orignalPath);
                     DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-                    DateTime writetime = fl.LastWriteTime.ToLocalTime(); 
+                    DateTime writetime = fl.LastWriteTime.ToLocalTime();
                     int timestamp = (int)(writetime - startTime).TotalSeconds; //原始文件的修改时间（时间戳）
                     DataTable dt = accdb.AccdbQuery("select * from Lists where FileName=" + "'" + orignalPath + "'");
-                    if (dt.Rows[0]["FileName"].ToString() == "") //判断数据库中是否有记录到这个文件路径
+                    if (dt.Rows.Count == 0) //判断数据库中是否有记录到这个文件路径
                     {
                         accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')");
                     }
