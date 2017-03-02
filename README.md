@@ -33,3 +33,9 @@ Backup
  -F2017_3_3 01_38_00
  -F2017_3_3 20_04_00
 ```
+
+##使用场景范例
+
+某台文件服务器SVR1，需要定期做文件备份，并放置SVR2上。
+在SVR1上映射SVR2的备份路径作为网络驱动器``S:``，FileBackuper放置在SVR1上，并设置好``config.ini``中的``SourcePath``为SVR1的需备份文件路径，以及``TargetPath``为驱动器``S:``。
+在SVR1上设定排程，每天凌晨1点执行一次FileBackuper.exe。
