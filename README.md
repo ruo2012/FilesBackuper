@@ -12,7 +12,7 @@ SourcePath为需备份的源路径。
 TargetPath为需要放置备份的路径。
 
 备份会以时间点命名的文件夹架构进行区分不同版本，下面是一个简单的示例，Backup是```TargetPath```，test是```SourcePath```：
-Backup
+```Backup
  -F2017_3_2 21_54_00
      -test
        -1.txt
@@ -25,3 +25,4 @@ Backup
    -F2017_3_2 23_11_56
    -F2017_3_3 01_38_00
    -F2017_3_3 20_04_00
+```
