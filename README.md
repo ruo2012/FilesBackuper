@@ -2,6 +2,7 @@
 
 FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用与文件服务器等需要时常进行备份的环境中。
 ![FilesBackuper](https://www.famio.cn/io/post/pictures/badges/master.svg "来自绯末")
+感谢：[啊你吓到我啦](https://git.oschina.net/augustpluscn) - 一位有问必答的好老师
 
 ##配置说明
 
