@@ -1,6 +1,0 @@
-C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\notes\bin\Debug\notes.exe.config
-C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\notes\bin\Debug\notes.exe
-C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\notes\bin\Debug\notes.pdb
-C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\notes\obj\Debug\notes.csprojResolveAssemblyReference.cache
-C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\notes\obj\Debug\notes.exe
-C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\notes\obj\Debug\notes.pdb
