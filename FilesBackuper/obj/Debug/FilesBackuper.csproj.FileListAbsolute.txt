@@ -3,3 +3,8 @@ D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\Debug\FilesBackup
 D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\Debug\FilesBackuper.pdb
 D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\Debug\FilesBackuper.exe
 D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\Debug\FilesBackuper.pdb
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\Debug\FilesBackuper.exe.config
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\Debug\FilesBackuper.exe
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\Debug\FilesBackuper.pdb
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\Debug\FilesBackuper.exe
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\Debug\FilesBackuper.pdb

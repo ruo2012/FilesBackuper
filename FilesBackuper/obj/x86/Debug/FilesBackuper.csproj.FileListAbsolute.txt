@@ -1,0 +1,5 @@
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBackuper.exe.config
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBackuper.exe
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBackuper.pdb
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.exe
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.pdb

@@ -19,11 +19,11 @@ namespace FilesBackuper
             {
                 switch (iniOption)
                 {
-                    case "F":   //全量备份
+                    case "F":   //全量备份，同时记录到数据库
                         fileOperation fo = new fileOperation();
                         fo.CopyDirectory(iniSource, iniTarget + iniOption + datetime.ToString());
                         //Console.WriteLine(datetime);
-                        Console.ReadKey();
+                        //Console.ReadKey();
                         break;
                     case "D":   //差异备份
 
