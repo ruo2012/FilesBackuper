@@ -1,8 +1,8 @@
 #FilesBackuper
 
-FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用与文件服务器等需要时常进行备份的环境中。
+FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用与文件服务器等需要时常进行备份的环境中。备份同时会记录源文件路径和修改时间，以用于差异备份和增量备份。数据库使用access。
 ![FilesBackuper](https://www.famio.cn/io/post/pictures/badges/master.svg "来自绯末")
-感谢：[啊你吓到我啦](https://git.oschina.net/augustpluscn) - 一位有问必答的好老师
+感谢：[啊你吓到我啦](https://git.oschina.net/augustpluscn)  一位有问必答的好老师
 
 ##配置说明
 
@@ -11,7 +11,7 @@ FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用与�
 ``Option``为备份模式，有以下三种可选：
 ```
  F - 全量备份，全部的备份模式。
- D - 差异备份（WIP）
+ D - 差异备份，和最后一次全量备份做比对，备份新增和有修改的文件。
  I - 增量备份（WIP）
 ```
 
