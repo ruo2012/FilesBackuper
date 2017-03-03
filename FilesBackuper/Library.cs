@@ -55,7 +55,7 @@ namespace FilesBackuper
     class fileOperation
     {
         /// <summary>
-        /// 复制文件夹内所有文件+文件夹到指定路径
+        /// 全量复制并记录至access数据库
         /// </summary>
         /// <param name="srcdir">源路径</param>
         /// <param name="desdir">目标路径</param>
@@ -106,39 +106,97 @@ namespace FilesBackuper
                 }
             }
         }
-    }
 
-    /// <summary>
-    /// Access数据库操作类
-    /// </summary>
-    class AccessDB
-    {
-        static string exePath = Environment.CurrentDirectory;//本程序所在路径
-        OleDbConnection conn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb");
         /// <summary>
-        /// Access数据库查询
+        /// 差异复制并记录到access数据库
         /// </summary>
-        /// <param name="sql">SQL语句</param>
-        public DataTable AccdbQuery(string sql)
+        /// <param name="srcdir">源路径</param>
+        /// <param name="desdir">目标途径</param>
+        public void CopyDirectoryDif(string srcdir, string desdir)
         {
-            conn.Open();
-            OleDbDataAdapter da = new OleDbDataAdapter(sql, conn); //创建适配对象
-            DataTable dt = new DataTable(); //新建表对象
-            da.Fill(dt); //用适配对象填充表对象
-            conn.Close();
-            return dt;
+            string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
+            string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
+            if (desdir.LastIndexOf("\\") == (desdir.Length - 1))    //前面是目标路径的最后一个文件夹路径，后面是目标文件夹长度?
+            {
+                desfolderdir = desdir + folderName; //目标文件路径 = 目标文件路径+文件名 （判断是否是子文件夹）
+            }
+            string[] filenames = Directory.GetFileSystemEntries(srcdir);    //将源路径下的所有元素加入到数组中
+            foreach (string file in filenames)// 遍历所有的文件和目录
+            {
+                if (Directory.Exists(file))// 先当作目录处理如果存在这个目录就递归Copy该目录下面的文件
+                {
+                    string currentdir = desfolderdir + "\\" + file.Substring(file.LastIndexOf("\\") + 1);
+                    if (!Directory.Exists(currentdir))
+                    {
+                        Directory.CreateDirectory(currentdir);
+                    }
+                    CopyDirectoryDif(file, desfolderdir);
+                }
+                else // 否则直接copy文件
+                {
+                    string srcfileName = file.Substring(file.LastIndexOf("\\") + 1);
+                    srcfileName = desfolderdir + "\\" + srcfileName;
+                    if (!Directory.Exists(desfolderdir))
+                    {
+                        Directory.CreateDirectory(desfolderdir);
+                    }
+                    string orignalPath = srcdir + file.Substring(file.LastIndexOf("\\"));   //最原始的文件路径
+                    AccessDB accdb = new AccessDB();
+                    DataTable dt = accdb.AccdbQuery("select ChangeTime from Lists where FileName=" + "'" + orignalPath + "'");
+                    DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+                    FileInfo fl = new FileInfo(orignalPath);
+                    DateTime realchangeTime = fl.LastWriteTime.ToLocalTime();
+                    int realchangeTimeStamps = (int)(realchangeTime - startTime).TotalSeconds;
+                    if (dt.Rows.Count != 0) //SQL中有数据
+                    {
+                        int sqlchangTimeStamps = Convert.ToInt32(dt.Rows[0]["ChangeTime"]);  //数据库内的修改时间
+                        if (realchangeTimeStamps > sqlchangTimeStamps)  //文件有修改
+                        {
+                            File.Copy(file, srcfileName);
+                            accdb.AccdbChange("update Lists set ChangeTime=" + "'" + realchangeTimeStamps + "'" + " where FileName=" + "'" + orignalPath + "'");
+                        }
+                    }
+                    else //SQL中没数据
+                    {
+                        File.Copy(file, srcfileName);
+                        accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + realchangeTimeStamps + "')");
+                    }
+                }
+            }
         }
 
         /// <summary>
-        /// Access数据库增删改
+        /// Access数据库操作类
         /// </summary>
-        /// <param name="sql">SQL语句</param>
-        public void AccdbChange(string sql)
+        class AccessDB
         {
-            conn.Open();
-            OleDbCommand comm = new OleDbCommand(sql, conn);
-            comm.ExecuteNonQuery();
-            conn.Close();
+            static string exePath = Environment.CurrentDirectory;//本程序所在路径
+            OleDbConnection conn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb");
+            /// <summary>
+            /// Access数据库查询
+            /// </summary>
+            /// <param name="sql">SQL语句</param>
+            public DataTable AccdbQuery(string sql)
+            {
+                conn.Open();
+                OleDbDataAdapter da = new OleDbDataAdapter(sql, conn); //创建适配对象
+                DataTable dt = new DataTable(); //新建表对象
+                da.Fill(dt); //用适配对象填充表对象
+                conn.Close();
+                return dt;
+            }
+
+            /// <summary>
+            /// Access数据库增删改
+            /// </summary>
+            /// <param name="sql">SQL语句</param>
+            public void AccdbChange(string sql)
+            {
+                conn.Open();
+                OleDbCommand comm = new OleDbCommand(sql, conn);
+                comm.ExecuteNonQuery();
+                conn.Close();
+            }
         }
     }
 }

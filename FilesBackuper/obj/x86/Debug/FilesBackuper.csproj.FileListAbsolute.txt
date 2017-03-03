@@ -3,3 +3,9 @@ C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\D
 C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBackuper.pdb
 C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.exe
 C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.pdb
+D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBackuper.exe.config
+D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBackuper.exe
+D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBackuper.pdb
+D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.csprojResolveAssemblyReference.cache
+D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.exe
+D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.pdb
