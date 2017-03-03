@@ -18,7 +18,12 @@ FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用于�
 ``SourcePath``为需备份的源路径。
 ``TargetPath``为需要放置备份的路径。
 
-##文件夹架构
+##软件文件架构
+``FileBackuper.exe`` 主程序。
+``FilesDetails.accdb`` 数据库文件，用于记录文件名称和修改时间。
+``config.ini`` 配置文件，用于设定备份模式和相关路径。
+
+##备份文件夹架构
 备份会以时间点命名的文件夹架构进行区分不同版本，下面是一个简单的示例，Backup是``TargetPath``，test是``SourcePath``：
 ```
 Backup
