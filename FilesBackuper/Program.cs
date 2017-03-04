@@ -27,6 +27,7 @@ namespace FilesBackuper
                         }
                         catch(Exception e)
                         {
+                            MessageBox.Show(e.ToString());
                             break;
                         }
                         break;
@@ -39,6 +40,7 @@ namespace FilesBackuper
                         }
                         catch(Exception e)
                         {
+                            MessageBox.Show(e.ToString());
                             break;
                         }
                     case "I":   //增量备份
