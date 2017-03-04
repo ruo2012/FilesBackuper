@@ -127,7 +127,6 @@ namespace FilesBackuper
             string exePath = Environment.CurrentDirectory;//本程序所在路径
             string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
             string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
-            string connsql = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb";
             SQLiteConnection conn;
             conn = new SQLiteConnection("Data Source=" + exePath + @"\FilesDetails.db" + "; Version=3;");
             conn.Open();
