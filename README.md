@@ -1,7 +1,10 @@
 #FilesBackuper
 
-FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用于文件服务器等需要时常进行备份的环境中。备份同时会记录源文件路径和修改时间，以用于差异备份和增量备份。数据库使用access。
+FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用于文件服务器等需要时常进行备份的环境中。备份同时会记录源文件路径和修改时间，以用于差异备份和增量备份。数据库使用SQLite。
 开发基于.Net Framework 4.5，请确保已经安装了此环境。
+
+[更新日志](https://git.oschina.net/famio/FilesBackuper/blob/master/Changelogs.md)
+
 ![FilesBackuper](https://www.famio.cn/io/post/pictures/badges/master.svg "来自绯末")
 感谢：[啊你吓到我啦](https://git.oschina.net/augustpluscn)  一位有问必答的好老师
 
@@ -21,7 +24,7 @@ FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用于�
 
 ##软件文件架构
 ``FileBackuper.exe`` 主程序。
-``FilesDetails.accdb`` 数据库文件，用于记录文件名称和修改时间。
+``FilesDetails.db`` 数据库文件，用于记录文件名称和修改时间。
 ``config.ini`` 配置文件，用于设定备份模式和相关路径。
 
 ##备份文件夹架构
