@@ -61,8 +61,12 @@ namespace FilesBackuper
         /// <param name="desdir">目标路径</param>
         public void CopyDirectory(string srcdir, string desdir)
         {
+            string exePath = Environment.CurrentDirectory;//本程序所在路径
             string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
             string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
+            string connsql = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb";
+            OleDbConnection conn = new OleDbConnection(connsql);
+            conn.Open();
             if (desdir.LastIndexOf("\\") == (desdir.Length - 1))    //前面是目标路径的最后一个文件夹路径，后面是目标文件夹长度?
             {
                 desfolderdir = desdir + folderName; //目标文件路径 = 目标文件路径+文件名 （判断是否是子文件夹）
@@ -88,23 +92,30 @@ namespace FilesBackuper
                         Directory.CreateDirectory(desfolderdir);
                     }
                     File.Copy(file, srcfileName);
-                    AccessDB accdb = new AccessDB();
+                    //AccessDB accdb = new AccessDB();     
                     string orignalPath = srcdir + file.Substring(file.LastIndexOf("\\"));   //最原始的文件路径
                     FileInfo fl = new FileInfo(orignalPath);
                     DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
                     DateTime writetime = fl.LastWriteTime.ToLocalTime();
-                    int timestamp = (int)(writetime - startTime).TotalSeconds; //原始文件的修改时间（时间戳）
-                    DataTable dt = accdb.AccdbQuery("select * from Lists where FileName=" + "'" + orignalPath + "'");
+                    int timestamp = (int)(writetime - startTime).TotalSeconds; //原始文件的修改时间（时间戳）                
+                    OleDbDataAdapter da = new OleDbDataAdapter("select * from Lists where FileName=" + "'" + orignalPath + "'", conn); //创建适配对象
+                    DataTable dt = new DataTable(); //新建表对象
+                    da.Fill(dt); //用适配对象填充表对象
                     if (dt.Rows.Count == 0) //判断数据库中是否有记录到这个文件路径
                     {
-                        accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')");
+                        OleDbCommand comm = new OleDbCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')", conn);
+                        comm.ExecuteNonQuery();
+                        //accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')");
                     }
                     else
                     {
-                        accdb.AccdbChange("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'");
+                        OleDbCommand comm = new OleDbCommand("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
+                        comm.ExecuteNonQuery();
+                        //accdb.AccdbChange("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'");
                     }
                 }
             }
+            conn.Close();
         }
 
         /// <summary>
@@ -172,6 +183,7 @@ namespace FilesBackuper
         {
             static string exePath = Environment.CurrentDirectory;//本程序所在路径
             OleDbConnection conn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb");
+
             /// <summary>
             /// Access数据库查询
             /// </summary>
