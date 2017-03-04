@@ -98,18 +98,18 @@ namespace FilesBackuper
                     DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
                     DateTime writetime = fl.LastWriteTime.ToLocalTime();
                     int timestamp = (int)(writetime - startTime).TotalSeconds; //原始文件的修改时间（时间戳）    
-                    SQLiteCommand command = new SQLiteCommand("select * from Lists where FileName=" + "'" + orignalPath + "'", conn);
+                    SQLiteCommand command = new SQLiteCommand(@"select * from Lists where FileName=" + "'" +@orignalPath + "'", conn);
                     SQLiteDataReader reader = command.ExecuteReader();
                     DataTable dt = new DataTable(); //新建表对象
                     dt.Load(reader);
                     if (dt.Rows.Count == 0) //判断数据库中是否有记录到这个文件路径
                     {
-                        SQLiteCommand comm = new SQLiteCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')", conn);
+                        SQLiteCommand comm = new SQLiteCommand(@"insert into Lists(FileName,ChangeTime)values('" + @orignalPath + "','" + @timestamp + "')", conn);
                         comm.ExecuteNonQuery();
                     }
                     else
                     {
-                        SQLiteCommand comm = new SQLiteCommand("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
+                        SQLiteCommand comm = new SQLiteCommand(@"update Lists set ChangeTime=" + "'" + @timestamp + "'" + " where FileName=" + "'" + @orignalPath + "'", conn);
                         comm.ExecuteNonQuery();
                     }
                 }
