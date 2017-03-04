@@ -65,9 +65,6 @@ namespace FilesBackuper
             string exePath = Environment.CurrentDirectory;//本程序所在路径
             string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
             string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
-            SQLiteConnection conn;
-            conn = new SQLiteConnection("Data Source=" + exePath + @"\FilesDetails.db" + "; Version=3;");
-            conn.Open();
             if (desdir.LastIndexOf("\\") == (desdir.Length - 1))    //前面是目标路径的最后一个文件夹路径，后面是目标文件夹长度?
             {
                 desfolderdir = desdir + folderName; //目标文件路径 = 目标文件路径+文件名 （判断是否是子文件夹）
@@ -75,6 +72,9 @@ namespace FilesBackuper
             string[] filenames = Directory.GetFileSystemEntries(srcdir);    //将源路径下的所有元素加入到数组中
             foreach (string file in filenames)// 遍历所有的文件和目录
             {
+                SQLiteConnection conn;
+                conn = new SQLiteConnection("Data Source=" + exePath + @"\FilesDetails.db" + "; Version=3;");
+                conn.Open();
                 if (Directory.Exists(file))// 先当作目录处理如果存在这个目录就递归Copy该目录下面的文件
                 {
                     string currentdir = desfolderdir + "\\" + file.Substring(file.LastIndexOf("\\") + 1);
@@ -113,8 +113,9 @@ namespace FilesBackuper
                         comm.ExecuteNonQuery();
                     }
                 }
+                conn.Close();
             }
-            conn.Close();
+            
         }
 
         /// <summary>
