@@ -4,6 +4,7 @@ using System.IO;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Data.OleDb;
+using System.Data.SQLite;
 
 namespace FilesBackuper
 {
@@ -64,8 +65,8 @@ namespace FilesBackuper
             string exePath = Environment.CurrentDirectory;//本程序所在路径
             string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
             string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
-            string connsql = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb";
-            OleDbConnection conn = new OleDbConnection(connsql);
+            SQLiteConnection conn;
+            conn = new SQLiteConnection("Data Source=" + exePath + @"\FilesDetails.db" + "; Version=3;");
             conn.Open();
             if (desdir.LastIndexOf("\\") == (desdir.Length - 1))    //前面是目标路径的最后一个文件夹路径，后面是目标文件夹长度?
             {
@@ -92,26 +93,24 @@ namespace FilesBackuper
                         Directory.CreateDirectory(desfolderdir);
                     }
                     File.Copy(file, srcfileName);
-                    //AccessDB accdb = new AccessDB();     
                     string orignalPath = srcdir + file.Substring(file.LastIndexOf("\\"));   //最原始的文件路径
                     FileInfo fl = new FileInfo(orignalPath);
                     DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
                     DateTime writetime = fl.LastWriteTime.ToLocalTime();
-                    int timestamp = (int)(writetime - startTime).TotalSeconds; //原始文件的修改时间（时间戳）                
-                    OleDbDataAdapter da = new OleDbDataAdapter("select * from Lists where FileName=" + "'" + orignalPath + "'", conn); //创建适配对象
+                    int timestamp = (int)(writetime - startTime).TotalSeconds; //原始文件的修改时间（时间戳）    
+                    SQLiteCommand command = new SQLiteCommand("select * from Lists where FileName=" + "'" + orignalPath + "'", conn);
+                    SQLiteDataReader reader = command.ExecuteReader();
                     DataTable dt = new DataTable(); //新建表对象
-                    da.Fill(dt); //用适配对象填充表对象
+                    dt.Load(reader);
                     if (dt.Rows.Count == 0) //判断数据库中是否有记录到这个文件路径
                     {
-                        OleDbCommand comm = new OleDbCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')", conn);
+                        SQLiteCommand comm = new SQLiteCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')", conn);
                         comm.ExecuteNonQuery();
-                        //accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')");
                     }
                     else
                     {
-                        OleDbCommand comm = new OleDbCommand("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
+                        SQLiteCommand comm = new SQLiteCommand("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
                         comm.ExecuteNonQuery();
-                        //accdb.AccdbChange("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'");
                     }
                 }
             }
@@ -129,7 +128,8 @@ namespace FilesBackuper
             string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
             string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
             string connsql = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb";
-            OleDbConnection conn = new OleDbConnection(connsql);
+            SQLiteConnection conn;
+            conn = new SQLiteConnection("Data Source=" + exePath + @"\FilesDetails.db" + "; Version=3;");
             conn.Open();
             if (desdir.LastIndexOf("\\") == (desdir.Length - 1))    //前面是目标路径的最后一个文件夹路径，后面是目标文件夹长度?
             {
@@ -156,32 +156,29 @@ namespace FilesBackuper
                         Directory.CreateDirectory(desfolderdir);
                     }
                     string orignalPath = srcdir + file.Substring(file.LastIndexOf("\\"));   //最原始的文件路径
-                    //AccessDB accdb = new AccessDB();
-                    //DataTable dt = accdb.AccdbQuery("select ChangeTime from Lists where FileName=" + "'" + orignalPath + "'");
                     DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
                     FileInfo fl = new FileInfo(orignalPath);
                     DateTime realchangeTime = fl.LastWriteTime.ToLocalTime();
                     int realchangeTimeStamps = (int)(realchangeTime - startTime).TotalSeconds;
-                    OleDbDataAdapter da = new OleDbDataAdapter("select * from Lists where FileName=" + "'" + orignalPath + "'", conn); //创建适配对象
+                    SQLiteCommand command = new SQLiteCommand("select * from Lists where FileName=" + "'" + orignalPath + "'", conn);
+                    SQLiteDataReader reader = command.ExecuteReader();
                     DataTable dt = new DataTable(); //新建表对象
-                    da.Fill(dt); //用适配对象填充表对象
+                    dt.Load(reader);
                     if (dt.Rows.Count != 0) //SQL中有数据
                     {
                         int sqlchangTimeStamps = Convert.ToInt32(dt.Rows[0]["ChangeTime"]);  //数据库内的修改时间
                         if (realchangeTimeStamps > sqlchangTimeStamps)  //文件有修改
                         {
                             File.Copy(file, srcfileName);
-                            OleDbCommand comm = new OleDbCommand("update Lists set ChangeTime=" + "'" + realchangeTimeStamps + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
+                            SQLiteCommand comm = new SQLiteCommand("update Lists set ChangeTime=" + "'" + realchangeTimeStamps + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
                             comm.ExecuteNonQuery();
-                            //accdb.AccdbChange("update Lists set ChangeTime=" + "'" + realchangeTimeStamps + "'" + " where FileName=" + "'" + orignalPath + "'");
                         }
                     }
                     else //SQL中没数据
                     {
                         File.Copy(file, srcfileName);
-                        OleDbCommand comm = new OleDbCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + realchangeTimeStamps + "')", conn);
+                        SQLiteCommand comm = new SQLiteCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + realchangeTimeStamps + "')", conn);
                         comm.ExecuteNonQuery();
-                        //accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + realchangeTimeStamps + "')");
                     }
                 }
             }

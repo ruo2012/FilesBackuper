@@ -9,4 +9,6 @@ D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\FilesBa
 D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.csprojResolveAssemblyReference.cache
 D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.exe
 D:\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.pdb
-C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\obj\x86\Debug\FilesBackuper.csprojResolveAssemblyReference.cache
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\System.Data.SQLite.dll
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\System.Data.SQLite.pdb
+C:\Users\Famio\Seafile\FamioCloud\Projects\FilesBackuper\FilesBackuper\bin\x86\Debug\System.Data.SQLite.dll.config
