@@ -65,6 +65,9 @@ namespace FilesBackuper
             string exePath = Environment.CurrentDirectory;//本程序所在路径
             string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
             string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
+            SQLiteConnection conn;
+            conn = new SQLiteConnection("Data Source=" + exePath + @"\FilesDetails.db" + "; Version=3;");
+            conn.Open();
             if (desdir.LastIndexOf("\\") == (desdir.Length - 1))    //前面是目标路径的最后一个文件夹路径，后面是目标文件夹长度?
             {
                 desfolderdir = desdir + folderName; //目标文件路径 = 目标文件路径+文件名 （判断是否是子文件夹）
@@ -72,9 +75,6 @@ namespace FilesBackuper
             string[] filenames = Directory.GetFileSystemEntries(srcdir);    //将源路径下的所有元素加入到数组中
             foreach (string file in filenames)// 遍历所有的文件和目录
             {
-                SQLiteConnection conn;
-                conn = new SQLiteConnection("Data Source=" + exePath + @"\FilesDetails.db" + "; Version=3;");
-                conn.Open();
                 if (Directory.Exists(file))// 先当作目录处理如果存在这个目录就递归Copy该目录下面的文件
                 {
                     string currentdir = desfolderdir + "\\" + file.Substring(file.LastIndexOf("\\") + 1);
@@ -98,24 +98,23 @@ namespace FilesBackuper
                     DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
                     DateTime writetime = fl.LastWriteTime.ToLocalTime();
                     int timestamp = (int)(writetime - startTime).TotalSeconds; //原始文件的修改时间（时间戳）    
-                    SQLiteCommand command = new SQLiteCommand(@"select * from Lists where FileName=" + "'" +@orignalPath + "'", conn);
+                    SQLiteCommand command = new SQLiteCommand("select * from Lists where FileName=" + "'" + orignalPath + "'", conn);
                     SQLiteDataReader reader = command.ExecuteReader();
                     DataTable dt = new DataTable(); //新建表对象
                     dt.Load(reader);
                     if (dt.Rows.Count == 0) //判断数据库中是否有记录到这个文件路径
                     {
-                        SQLiteCommand comm = new SQLiteCommand(@"insert into Lists(FileName,ChangeTime)values('" + @orignalPath + "','" + @timestamp + "')", conn);
+                        SQLiteCommand comm = new SQLiteCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + timestamp + "')", conn);
                         comm.ExecuteNonQuery();
                     }
                     else
                     {
-                        SQLiteCommand comm = new SQLiteCommand(@"update Lists set ChangeTime=" + "'" + @timestamp + "'" + " where FileName=" + "'" + @orignalPath + "'", conn);
+                        SQLiteCommand comm = new SQLiteCommand("update Lists set ChangeTime=" + "'" + timestamp + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
                         comm.ExecuteNonQuery();
                     }
                 }
-                conn.Close();
             }
-            
+            conn.Close();
         }
 
         /// <summary>
