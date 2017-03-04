@@ -125,8 +125,12 @@ namespace FilesBackuper
         /// <param name="desdir">目标途径</param>
         public void CopyDirectoryDif(string srcdir, string desdir)
         {
+            string exePath = Environment.CurrentDirectory;//本程序所在路径
             string folderName = srcdir.Substring(srcdir.LastIndexOf("\\") + 1); //获取源路径最后的那个文件名or文件夹名
             string desfolderdir = desdir + "\\" + folderName; //目标文件or文件夹的完整路径
+            string connsql = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + exePath + @"\FilesDetails.accdb";
+            OleDbConnection conn = new OleDbConnection(connsql);
+            conn.Open();
             if (desdir.LastIndexOf("\\") == (desdir.Length - 1))    //前面是目标路径的最后一个文件夹路径，后面是目标文件夹长度?
             {
                 desfolderdir = desdir + folderName; //目标文件路径 = 目标文件路径+文件名 （判断是否是子文件夹）
@@ -152,28 +156,36 @@ namespace FilesBackuper
                         Directory.CreateDirectory(desfolderdir);
                     }
                     string orignalPath = srcdir + file.Substring(file.LastIndexOf("\\"));   //最原始的文件路径
-                    AccessDB accdb = new AccessDB();
-                    DataTable dt = accdb.AccdbQuery("select ChangeTime from Lists where FileName=" + "'" + orignalPath + "'");
+                    //AccessDB accdb = new AccessDB();
+                    //DataTable dt = accdb.AccdbQuery("select ChangeTime from Lists where FileName=" + "'" + orignalPath + "'");
                     DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
                     FileInfo fl = new FileInfo(orignalPath);
                     DateTime realchangeTime = fl.LastWriteTime.ToLocalTime();
                     int realchangeTimeStamps = (int)(realchangeTime - startTime).TotalSeconds;
+                    OleDbDataAdapter da = new OleDbDataAdapter("select * from Lists where FileName=" + "'" + orignalPath + "'", conn); //创建适配对象
+                    DataTable dt = new DataTable(); //新建表对象
+                    da.Fill(dt); //用适配对象填充表对象
                     if (dt.Rows.Count != 0) //SQL中有数据
                     {
                         int sqlchangTimeStamps = Convert.ToInt32(dt.Rows[0]["ChangeTime"]);  //数据库内的修改时间
                         if (realchangeTimeStamps > sqlchangTimeStamps)  //文件有修改
                         {
                             File.Copy(file, srcfileName);
-                            accdb.AccdbChange("update Lists set ChangeTime=" + "'" + realchangeTimeStamps + "'" + " where FileName=" + "'" + orignalPath + "'");
+                            OleDbCommand comm = new OleDbCommand("update Lists set ChangeTime=" + "'" + realchangeTimeStamps + "'" + " where FileName=" + "'" + orignalPath + "'", conn);
+                            comm.ExecuteNonQuery();
+                            //accdb.AccdbChange("update Lists set ChangeTime=" + "'" + realchangeTimeStamps + "'" + " where FileName=" + "'" + orignalPath + "'");
                         }
                     }
                     else //SQL中没数据
                     {
                         File.Copy(file, srcfileName);
-                        accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + realchangeTimeStamps + "')");
+                        OleDbCommand comm = new OleDbCommand("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + realchangeTimeStamps + "')", conn);
+                        comm.ExecuteNonQuery();
+                        //accdb.AccdbChange("insert into Lists(FileName,ChangeTime)values('" + orignalPath + "','" + realchangeTimeStamps + "')");
                     }
                 }
             }
+            conn.Close();
         }
 
         /// <summary>
