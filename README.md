@@ -2,7 +2,7 @@
 
 FileBackuper是一个简单的无UI文件/文件夹复制工具。可应用于文件服务器等需要时常进行备份的环境中。备份同时会记录源文件路径和修改时间，以用于差异备份和增量备份。数据库使用SQLite。
 开发基于.Net Framework 4.5，请确保已经安装了此环境。
-*默认程序实行完成后不会自动关闭进程，如有需要请在``MainForm_Load``方法中加入``Close()``;
+*默认程序执行完成后不会自动关闭进程，如有需要请在``MainForm_Load``方法中加入``Close()``;
 
 [更新日志](https://git.oschina.net/famio/FilesBackuper/blob/master/Changelogs.md)
 
